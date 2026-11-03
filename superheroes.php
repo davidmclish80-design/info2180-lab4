@@ -65,6 +65,39 @@ $superheroes = [
 
 ?>
 
+
+<?php
+	//Sanitise user input from text field using htmlspecialchars() or htmlentities()
+	$search = htmlentities($_GET["query"] ?? '');
+	
+	if($search !== ''){
+		getHero($superheroes, $search);
+	}
+	
+
+
+
+	//FUNCTIONS
+  function getHero($array, $name){
+		$ret = json_encode(["success" => "failure", "message" => "Superhero not found"]);
+		foreach($array as $hero){
+			if(lazycmp($hero["name"], $name) || lazycmp($hero["alias"], $name)){
+				$ret = json_encode($hero);
+				break;
+			}
+		}
+		echo $ret;
+		exit;
+	} 
+
+	function lazycmp($val1, $val2){
+		return strcasecmp($val1, $val2) === 0;
+	}
+
+
+?>
+
+
 <ul>
 <?php foreach ($superheroes as $superhero): ?>
   <li><?= $superhero['alias']; ?></li>
